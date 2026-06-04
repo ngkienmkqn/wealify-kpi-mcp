@@ -9,7 +9,9 @@
 | "Chapter Sales đang thế nào?" | `kpi_chapter(chapter='SALES')` | Lấy `members[].metrics` → bảng xếp hạng |
 | "Chapter Growth đang thế nào?" | `kpi_chapter(chapter='GROWTH')` | Tương tự |
 | "So sánh Q1 vs Q2?" | Gọi 2 lần: `kpi_chapter(chapter, quarter='Q1/2026')` + `kpi_chapter(chapter, quarter='Q2/2026')` | So sánh value cùng metricKey |
-| "Tháng 4, 5, 6 revenue bao nhiêu?" | `kpi_member_kpi(userId)` → xem `engine2.monthly[]` | Có sẵn breakdown theo tháng |
+| "Tháng 5 Sales đạt bao nhiêu?" | `kpi_chapter_monthly(chapter='SALES', month='2026-05')` | GTV + số deal + số KH **từng người** trong tháng |
+| "Tháng 4, 5, 6 revenue squad bao nhiêu?" | `kpi_member_kpi(userId)` → xem `engine2.monthly[]` | Revenue squad theo tháng |
+| "So sánh tháng 4 vs tháng 5 Sales?" | Gọi 2 lần `kpi_chapter_monthly` với month khác nhau | So sánh GTV cùng member |
 | "Tôi là X, tôi cần làm gì để cải thiện?" | `kpi_member_kpi(userId)` + `kpi_rubric_doc(chapter)` | So sánh metrics vs rubric → chỉ ra GAP + action |
 | "Ai đang top chapter?" | `kpi_chapter(chapter)` | Sort `members` theo `metrics[].value` |
 | "Rubric chấm thế nào?" | `kpi_rubric_doc(chapter)` | Trả về toàn bộ bảng tiêu chuẩn |

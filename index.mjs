@@ -105,6 +105,16 @@ server.tool(
 );
 
 server.tool(
+  'kpi_chapter_monthly',
+  'Số liệu chapter theo TỪNG THÁNG. Dùng khi cần xem "tháng 5 Sales đạt bao nhiêu?". Với SALES: trả về GTV, số deal, số KH từng người trong tháng. Với chapter khác: revenue squad tháng đó + metrics.',
+  {
+    chapter: z.enum(['SALES', 'PRODUCT', 'GROWTH', 'ENGINEER']),
+    month: z.string().describe("Tháng cần xem, format 'YYYY-MM', ví dụ '2026-05'"),
+  },
+  async ({ chapter, month }) => ok(await call(`/service/chapter/${chapter}/monthly`, { month })),
+);
+
+server.tool(
   'kpi_members',
   'Active roster: members + Leads (id, name, email, role, chapter, squad) — so you know WHO to message and can iterate. Optional filters: chapter, squadId.',
   {
