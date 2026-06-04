@@ -149,8 +149,8 @@ const RUBRIC_FILE_MAP = {
   SALES:     'rubric-va-sales-q2-2026.md',
   PRODUCT:   'rubric_chapter_product_q2_2026.md',
   ENGINEER:  'rubric_chapter_dev_q2_2026.md',
-  GROWTH:    'rubric_squad_growth_q2_2026.md',
-  MARKETING: 'Rubric_Chapter_Marketing_Q2_2026.md',
+  GROWTH:    'Rubric_Chapter_Marketing_Q2_2026.md',  // DB dùng GROWTH, nhưng tài liệu gọi là Marketing
+  MARKETING: 'Rubric_Chapter_Marketing_Q2_2026.md',  // Alias — cùng file
 };
 
 server.tool(

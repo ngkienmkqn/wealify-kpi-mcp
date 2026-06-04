@@ -146,9 +146,11 @@ Hoặc dùng `kpi_chapter_monthly` → xem `pacing.level` và `pacing.gap` trự
 ---
 
 ## Danh sách chapters có sẵn
-- `SALES` — BD/Sales, Engine 1, North Star = GTV
+- `SALES` — BD/Sales, Engine 1, North Star = Tổng GTV cá nhân/Quý
 - `PRODUCT` — PM, Engine 2, North Star = Spec Rejection Rate
 - `ENGINEER` — Dev, Engine 2, North Star = Cycle Time
-- `GROWTH` — Marketing/Growth, Engine 2, North Star = MAU Growth
-- `MARKETING` — (alias của GROWTH trong rubric)
+- `GROWTH` / `MARKETING` — Marketing, Engine 2, North Star = Tăng trưởng KH MỚI sử dụng dịch vụ (%/tháng)
+  - ⚠️ Trong DB dùng tên `GROWTH`, nhưng rubric chính thức gọi là **Marketing**
+  - Cả 2 tên đều hoạt động khi gọi `kpi_rubric_doc('GROWTH')` hoặc `kpi_rubric_doc('MARKETING')`
+  - Ngưỡng: Fail < 8%/tháng | Đạt chuẩn 8–15% | Xuất sắc > 15%
 
