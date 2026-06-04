@@ -65,6 +65,7 @@ Thêm vào MCP config của agent (ví dụ):
 | `kpi_alerts` | `quarter?` | Cảnh báo: squad dưới sàn · chạm trần 15% GP · sync trễ |
 | `kpi_overview` | `quarter?` | Toàn cảnh: squad · leaderboard · chapter avg · engine-3 |
 | `kpi_chapter` | `chapter`, `quarter?` | Tổng hợp 1 chapter + per-member |
+| `kpi_chapter_monthly` | `chapter`, `month` | **Theo tháng**: GTV + số deal + số KH từng người (Sales), revenue squad (khác) |
 | `kpi_members` | `chapter?`, `squadId?` | **Roster**: member + Lead + email (biết DM ai / lặp qua) |
 | `kpi_rubrics` | `chapter?`, `quarter?` | **Rubric**: ngưỡng fail/standard/excellent + hệ số + data source |
 | `kpi_sla_status` | `month` | **Tiến độ chấm điểm**: Lead nào đã chấm xong, ai đang quá hạn |
@@ -92,6 +93,7 @@ curl -H "Authorization: Bearer $PAPERCLIP_READ_TOKEN" \
 | `GET /service/alerts` | `quarter?` | Tín hiệu cảnh báo dẫn xuất |
 | `GET /service/overview` | `quarter?` | Toàn cảnh công ty (squad · leaderboard · chapter avg) |
 | `GET /service/chapter/:chapter` | `quarter?` | Tổng hợp chapter + per-member |
+| `GET /service/chapter/:chapter/monthly` | `month` | Theo tháng: GTV per member (Sales), squad revenue (khác) |
 | `GET /service/members` | `chapter?` `squadId?` | Roster: member + Lead + email |
 | `GET /service/rubrics` | `chapter?` `quarter?` | Rubric: ngưỡng chấm điểm + hệ số |
 | `GET /service/scoring/:month/sla` | — | Tiến độ chấm điểm: Lead nào đúng hạn, ai trễ |
