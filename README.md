@@ -125,6 +125,30 @@ curl -H "Authorization: Bearer $PAPERCLIP_READ_TOKEN" \
 }
 ```
 
+`GET /service/chapter/SALES/monthly?month=2026-05` ⭐ MỚI
+```json
+{
+  "chapter": "SALES",
+  "month": "2026-05",
+  "quarter": "Q2/2026",
+  "rubricNote": "Ngưỡng tháng = ngưỡng quý ÷ 3. Sàn/tháng = 20.0 Tỷ, Xuất sắc/tháng = 33.3 Tỷ",
+  "summary": { "totalGtv": 160180007131, "totalDeals": 9697, "memberCount": 3 },
+  "members": [
+    {
+      "userId": "c4d5...", "fullName": "Lê Thị Duyên", "squadName": "VA Squad",
+      "gtv": 115133982865, "dealCount": 5083, "uniqueCustomers": 233,
+      "pacing": {
+        "level": "EXCELLENT",
+        "monthlyTarget": 20000000000,
+        "monthlyExcellent": 33333333333,
+        "gap": 0, "surplus": 81800649532
+      }
+    }
+  ]
+}
+```
+> **Lưu ý pacing:** `monthlyTarget` = ngưỡng sàn quý ÷ 3. `level` = FAIL / STANDARD / EXCELLENT. `gap` = còn thiếu bao nhiêu (khi FAIL). `surplus` = vượt bao nhiêu (khi EXCELLENT).
+
 `GET /service/member/:userId/kpi?quarter=Q2/2026` → `{ quarter, user, engine1, engine2, clawback, totalPayout }`
 (chi tiết engine1 = commission, engine2 = squad-tier × chapter-multiplier + capping, clawback = hoàn phí).
 

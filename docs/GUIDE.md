@@ -41,10 +41,62 @@ Trả về **toàn bộ** KPI cá nhân, bao gồm:
 **Ví dụ trả lời "Tháng 5 revenue bao nhiêu?":**
 → Gọi `kpi_member_kpi(userId)` → xem `engine2.monthly[1]` (tháng 5 = index 1 trong Q2)
 
-### `kpi_chapter(chapter, quarter)` — SO SÁNH MEMBERS
+### `kpi_chapter(chapter, quarter)` — SO SÁNH MEMBERS CẢ QUÝ
 - `members[].metrics[]`: Mỗi member có value + level + metadata
 - `metadata` chứa Q1 vs Q2 comparison (q1Gtv, q2Gtv, prevGtv, currentGtv)
 - Có thể so sánh quý bằng cách gọi 2 lần với quarter khác nhau
+
+### `kpi_chapter_monthly(chapter, month)` — XEM KPI TỪNG THÁNG ⭐ MỚI
+
+Trả về số liệu **của từng tháng cụ thể**, thay vì cả quý. Đặc biệt hữu ích cho **team Sales**.
+
+**Tham số:**
+- `chapter`: `SALES` | `PRODUCT` | `GROWTH` | `ENGINEER`
+- `month`: Format `YYYY-MM`, ví dụ `2026-05`
+
+**Với chapter SALES, trả về:**
+```json
+{
+  "chapter": "SALES",
+  "month": "2026-05",
+  "quarter": "Q2/2026",
+  "rubricNote": "Ngưỡng tháng = ngưỡng quý ÷ 3. Sàn/tháng = 20.0 Tỷ, Xuất sắc/tháng = 33.3 Tỷ",
+  "summary": { "totalGtv": 160180007131, "totalDeals": 9697, "memberCount": 3 },
+  "members": [
+    {
+      "fullName": "Lê Thị Duyên",
+      "gtv": 115133982865,
+      "dealCount": 5083,
+      "uniqueCustomers": 233,
+      "pacing": {
+        "level": "EXCELLENT",
+        "monthlyTarget": 20000000000,
+        "monthlyExcellent": 33333333333,
+        "gap": 0,
+        "surplus": 81800649532
+      }
+    }
+  ]
+}
+```
+
+**Giải thích `pacing`:**
+- `monthlyTarget` = ngưỡng sàn quý ÷ 3 (ví dụ 60 Tỷ ÷ 3 = 20 Tỷ/tháng)
+- `monthlyExcellent` = ngưỡng xuất sắc quý ÷ 3 (ví dụ 100 Tỷ ÷ 3 = 33.3 Tỷ/tháng)
+- `level`: `FAIL` (< sàn), `STANDARD` (đạt chuẩn), `EXCELLENT` (xuất sắc)
+- `gap`: Số tiền còn thiếu để đạt sàn (chỉ khi FAIL)
+- `surplus`: Số tiền vượt trội trên ngưỡng xuất sắc (chỉ khi EXCELLENT)
+
+**Với chapter khác (PRODUCT, ENGINEER, GROWTH):**
+- Trả về `squadRevenue` tháng đó + `metrics[]` từ rubric quý (kèm ghi chú là data cả quý)
+
+**Khi nào dùng tool này:**
+| Câu hỏi | Cách gọi |
+|---------|----------|
+| "Tháng 5 Sales đạt bao nhiêu?" | `kpi_chapter_monthly('SALES', '2026-05')` |
+| "Duyên tháng 4 vs tháng 5 thế nào?" | Gọi 2 lần: `month='2026-04'` và `month='2026-05'` → so `gtv` |
+| "Ai đang dưới sàn tháng này?" | Gọi 1 lần → lọc `pacing.level = 'FAIL'` |
+| "Sales Q2 tổng bao nhiêu?" | Gọi 3 lần: tháng 4, 5, 6 → cộng `summary.totalGtv` |
 
 ### `kpi_rubric_doc(chapter)` — HIỂU CÁCH CHẤM
 - Trả về file markdown đầy đủ với bảng ngưỡng
@@ -60,6 +112,10 @@ Khi người dùng hỏi câu này, làm theo 4 bước:
 ```
 kpi_member_kpi(userId='...', quarter='Q2/2026')
 ```
+Nếu cần xem từng tháng (đặc biệt Sales):
+```
+kpi_chapter_monthly(chapter='SALES', month='2026-05')
+```
 
 ### Bước 2: Lấy rubric
 ```
@@ -72,6 +128,8 @@ Với mỗi metric trong `engine2.metrics[]`:
 - Nếu `level = STANDARD`: Tính GAP = `thresholdExcellent - value` → "Bạn cần thêm Y để lên Xuất sắc"
 - Nếu `level = EXCELLENT`: → "Bạn đang xuất sắc, duy trì!"
 
+Hoặc dùng `kpi_chapter_monthly` → xem `pacing.level` và `pacing.gap` trực tiếp.
+
 ### Bước 4: Đưa ra action plan dựa trên chính sách
 Đọc `mcp/docs/kpi_bonus_dual_engine_2026_v2.md` để hiểu:
 - Engine 1 (Sales): Hoa hồng 0.15% GTV, chia mâm 65-20-15
@@ -79,11 +137,11 @@ Với mỗi metric trong `engine2.metrics[]`:
 - Engine 3: Annual Bonus khi Squad đạt +80% YoY
 - Capping: Max 15% Lợi nhuận Gộp, Max 150% Lương
 
-**Ví dụ output:**
-> "Anh Sơn ơi, GTV Q2 đang 33.6 Tỷ — đã vượt ngưỡng Xuất sắc (>10 Tỷ) 👍
-> Nhưng Growth đang -46% — dưới ngưỡng Fail (<-10%). 
-> Để lên Đạt chuẩn, cần tăng volume ít nhất 10% so với Q1 (tức cần ~68.5 Tỷ/quý).
-> Action: Focus giữ chân 5 khách hàng lớn nhất đang giảm volume."
+**Ví dụ output cho Sales (theo tháng):**
+> "Anh Sơn ơi, GTV tháng 5 đang **17.0 Tỷ** — dưới sàn tháng (20 Tỷ), thiếu **2.9 Tỷ** nữa.
+> Chị Duyên tháng 5 đạt **115.1 Tỷ** — vượt xuất sắc, thặng dư +81.8 Tỷ 🌟
+> Chị Trà tháng 5 đạt **27.9 Tỷ** — đạt chuẩn, cần thêm 5.4 Tỷ để lên xuất sắc.
+> Action cho anh Sơn: Focus khách hàng top 5 volume đang giảm, cần tăng ~3 Tỷ GTV trong tháng 6."
 
 ---
 
@@ -93,3 +151,4 @@ Với mỗi metric trong `engine2.metrics[]`:
 - `ENGINEER` — Dev, Engine 2, North Star = Cycle Time
 - `GROWTH` — Marketing/Growth, Engine 2, North Star = MAU Growth
 - `MARKETING` — (alias của GROWTH trong rubric)
+
