@@ -5,11 +5,15 @@
 ```yaml
 type: "chapter_engineering"
 quarter: "Q2/2026"
-chapter: "Engineering (Dev & Test)"
+chapter: "Engineering (Dev & QA/Tester)"
 chapter_lead: "@longvh"
 metric_tool: "Linear"
-status: "Draft"
+status: "Active"
+last_updated: "2026-06-08"
 ```
+
+> ⚠️ **Tài liệu này đã được đồng bộ với cấu hình DB thực tế (Q2/2026).**
+> Mọi ngưỡng dưới đây là giá trị đang chạy trên hệ thống — không phải draft.
 
 ---
 
@@ -23,22 +27,63 @@ status: "Draft"
 
 # PHẦN A: RUBRIC CHO DEVELOPER
 
-> **Nguồn dữ liệu:** Linear → Workspace Insights, filter theo Assignee + Quarter | **Dashboard URL:** `[Dán link tại đây]`
+> **Nguồn dữ liệu:** Linear → Workspace Insights, filter theo Assignee + Quarter
+> **Dashboard URL:** `kpi.wealify.com` → Chapter Engineer → Tab "Developer (Dev)"
 
-| Mức độ / Hệ số | Cột 1: Năng lực chuyên môn (Định tính) | Cột 2: Data đo lường tự động (Linear) | Cột 3: Ngưỡng điều kiện (Threshold) |
-|---|---|---|---|
-| ❌ **KHÔNG ĐẠT (0x)** | Thiếu khả năng tự quản lý tiến độ. Thường xuyên block mà không escalate. Không chia nhỏ task hợp lý. Gây ra bug nghiêm trọng trên production. Không hoàn thành công việc được giao. Nhiều task bị cancel hoặc rollback. Chỉ làm task được giao, không viết docs. | 1. Có ≥ 3 sub-issues bị kéo dài quá 1 cycle mà không có lý do hợp lệ. 2. Gây ra ≥ 2 critical bugs lộ Prod trong quý. 3. Tỷ lệ Sub-issue Done / Assigned < 60%. | **Cycle Time > 10 ngày** HOẶC **Critical bugs on Prod ≥ 2** HOẶC **Completion Rate < 60%** |
-| ✅ **ĐẠT CHUẨN (1.0x)** | Tự quản lý tiến độ tốt. Biết chia nhỏ task, estimate hợp lý. Escalate kịp thời khi bị block. Hiếm khi gây bug trên production. Tuân thủ coding standards. Hoàn thành đầy đủ công việc được giao. Có planning rõ ràng, ít task bị miss. Có ý thức đóng góp hệ thống, tham gia review / fix tech debt khi được yêu cầu. | 1. Hoàn thành sub-issues đúng Sprint Baseline. Cycle Time ổn định qua các sprint. 2. Critical bugs on Prod ≤ 1. 3. Tỷ lệ completion ≥ 80%. | **5 ngày ≤ Cycle Time ≤ 10 ngày** VÀ **Critical bugs on Prod ≤ 1** VÀ **80% ≤ Completion Rate ≤ 95%** |
-| 🌟 **XUẤT SẮC (1.15x)** | Delivery nhanh, chủ động chia task nhỏ, giúp đỡ đồng đội. Estimate chính xác, hiếm khi trễ deadline. Code chất lượng cao, ít comment sửa. Chủ động review code cho team. Đóng góp cải thiện coding standards/linting rules. Hoàn thành vượt target. Chủ động nhận thêm task khi xong sớm. Chủ động tạo shared component, viết technical doc (điểm cộng: mentor junior). Là người dẫn dắt kỹ thuật trong team. | 1. Không có sub-issue nào bị carry-over giữa các cycle. 2. Zero critical bugs on Prod. Có đóng góp PR review cho ≥ 3 PRs của đồng đội/quý. 3. Completion ≥ 95%. Có nhận thêm ≥ 2 unplanned tasks và hoàn thành. Có ≥ 1 đóng góp (trong triage). | **Cycle Time < 5 ngày** VÀ **0 issue carry-over** VÀ **Critical bugs = 0** VÀ **Review PRs ≥ 3/quý** VÀ **Completion ≥ 95%** VÀ **Contribution ≥ 2** VÀ **Được Lead xác nhận** |
+## Chỉ số cốt lõi (tính vào hệ số nhân cuối)
+
+| Chỉ số | Không đạt (0x) | Đạt chuẩn (1.0x) | Xuất sắc (1.15x) |
+|--------|---------------|------------------|-----------------|
+| **Cycle Time TB** | > 10 ngày | 5–10 ngày | < 5 ngày |
+| **Critical Bugs on Prod** | ≥ 2 bugs | ≤ 1 bug | 0 bugs |
+| **Tỷ lệ Hoàn thành** | < 80% | 80–95% | ≥ 95% |
+| **Issue Carry-over** | ≥ 3 issues | 1–2 issues | 0 issues |
+
+> 💡 **Cách tính hệ số cuối:** Tích 4 chỉ số cốt lõi trên × nhau.
+> Ví dụ: Cycle Time `1.0x` × Critical Bugs `1.15x` × Completion `1.0x` × Carry-over `1.15x` = **1.32x**
+
+## Chỉ số bonus (chỉ hiển thị gauge, KHÔNG tính vào hệ số cuối)
+
+| Chỉ số | Không đạt | Đạt chuẩn | Xuất sắc | Ghi chú |
+|--------|-----------|-----------|----------|---------|
+| **Review PRs** | 0 PRs | 1–2 PRs | ≥ 3 PRs | Khuyến khích culture review |
+| **Đóng góp (Contribution)** | 0 | 1 | ≥ 2 | Shared component, tech doc, mentor |
+
+> ⚠️ **Tại sao không tính vào hệ số cuối?**
+> REVIEW_PRS và CONTRIBUTION có `multiplierFail = 0x`. Nếu tính vào tích chung, một developer chưa review PR nào sẽ bị **toàn bộ thưởng归零 (0x)** — không phản ánh đúng năng lực cốt lõi. Hai chỉ số này được giữ trên gauge để **khuyến khích văn hóa đóng góp**, nhưng không phạt tài chính nếu chưa đạt.
+
+## Bảng đánh giá toàn diện (định tính)
+
+| Mức / Hệ số | Hành vi chuyên môn | Ngưỡng tổng hợp |
+|---|---|---|
+| **❌ KHÔNG ĐẠT (0x)** | Thiếu khả năng tự quản lý tiến độ. Thường xuyên block mà không escalate. Gây ra bug nghiêm trọng trên production. Không hoàn thành công việc được giao. Nhiều task bị cancel hoặc rollback. | Cycle Time > 10 ngày **HOẶC** Critical bugs ≥ 2 **HOẶC** Completion Rate < 80% **HOẶC** Carry-over ≥ 3 issues |
+| **✅ ĐẠT CHUẨN (1.0x)** | Tự quản lý tiến độ tốt. Biết chia nhỏ task, estimate hợp lý. Escalate kịp thời khi bị block. Hiếm khi gây bug trên production. Tuân thủ coding standards. Hoàn thành đầy đủ công việc được giao. | 5 ngày ≤ Cycle Time ≤ 10 ngày **VÀ** Critical bugs ≤ 1 **VÀ** 80% ≤ Completion Rate ≤ 95% **VÀ** Carry-over ≤ 2 |
+| **🌟 XUẤT SẮC (1.15x)** | Delivery nhanh, chủ động chia task nhỏ, giúp đỡ đồng đội. Code chất lượng cao, ít comment sửa. Chủ động review code. Đóng góp cải thiện coding standards. Hoàn thành vượt target. Mentor junior. | Cycle Time < 5 ngày **VÀ** 0 Carry-over **VÀ** Critical bugs = 0 **VÀ** Completion ≥ 95% |
 
 ---
 
 # PHẦN B: RUBRIC CHO TESTER / QA
 
-> **Nguồn dữ liệu:** Linear → Filter: Label = `bug` / `critical-bug` / `bug-prod` + Creator = [QA Name] + State = Confirmed/Fixed | **Dashboard URL:** `[Dán link tại đây]`
+> **Nguồn dữ liệu:** Linear → Filter: Label = `bug` / `critical-bug` / `bug-prod` + Creator = [QA Name] + State = Confirmed/Fixed
+> **Dashboard URL:** `kpi.wealify.com` → Chapter Engineer → Tab "Tester (QA)"
 
-| Mức độ / Hệ số | Cột 1: Năng lực chuyên môn (Định tính) | Cột 2: Data đo lường tự động (Linear) | Cột 3: Ngưỡng điều kiện (Threshold) |
-|---|---|---|---|
-| ❌ **KHÔNG ĐẠT (0x)** | Không phát hiện được bug happy case. Testcase không cover được spec. Nhiều bug report bị reject (invalid). Nhiều bugs lọt production ở feature đã QA passed (bug critical). Test coverage thiếu, miss nhiều edge cases quan trọng. Chỉ làm task được giao, không viết testcase. | 1. Tỷ lệ bug bị reject (Invalid/Duplicate) > 30%. Không viết testcase cho issue có spec phức tạp. Không có checklist productions cho những issue phức tạp. 2. Escaped bugs/quý ở features đã test-passed > 10 | **Bug rejection rate > 30%** HOẶC **Escaped bugs > 10/quý** |
-| ✅ **ĐẠT CHUẨN (1.0x)** | Không lọt bug happy case theo specs, bug report dễ hiểu. Cover được happy path + major edge cases. Ít bugs lọt production. Feature chính đều được cover tốt. Có ý thức đóng góp hệ thống, tham gia review specs. | 1. Bug rejection rate ≤ 30%. Bug reports đầy đủ (steps, expected, actual, evidence). Viết testcase đầy đủ, rõ ràng, cover được specs. 2. Escaped bugs ≤ 10/quý. | **Bug rejection rate ≤ 30%** VÀ **Escaped bugs ≤ 10/quý** |
-| 🌟 **XUẤT SẮC (1.15x)** | Phát hiện được bugs phức tạp ở edge cases, race conditions. Bug reports detailed, dễ reproduce. Chủ động regression test. Gần như zero escaped bugs. Chứng minh test coverage rất tốt, regression testing chặt chẽ. Chủ động share kiến thức. | 1. Bug rejection rate < 10%. Phát hiện ≥ 2 critical/high priority bugs. Chủ động improve test coverage. 2. Escaped bugs ≤ 3/quý. 3. Có docs sharing hoặc seminar. Có ≥ 1 đóng góp (trong triage). | **Bug rejection rate < 10%** VÀ **Critical/High bugs found ≥ 2** VÀ **Escaped bugs ≤ 3/quý** VÀ **Contribution ≥ 1** VÀ **Được Lead xác nhận** |
+## Chỉ số tính vào hệ số nhân cuối (cả 3 đều tính)
+
+| Chỉ số | Không đạt (0x) | Đạt chuẩn (1.0x) | Xuất sắc (1.15x) | Direction |
+|--------|---------------|------------------|-----------------|-----------|
+| **Tỷ lệ Bug Rejection (%)** | > 30% | 10–30% | < 10% | ⬇️ Càng thấp càng tốt |
+| **Escaped Bugs (bugs lọt Prod)** | > 10 bugs | 3–10 bugs | ≤ 3 bugs | ⬇️ Càng thấp càng tốt |
+| **Critical/High Bugs Found** | < 1 bug | 1 bug | ≥ 2 bugs | ⬆️ Càng cao càng tốt |
+
+> 💡 **Cách tính hệ số cuối:** Tích cả 3 chỉ số QA × nhau.
+> Ví dụ: Bug Rejection `1.15x` × Escaped Bugs `1.15x` × Bugs Found `1.15x` = **1.52x**
+
+> ℹ️ **Lưu ý hiển thị:** Critical/High Bugs Found không hiển thị trong bảng thành viên (để UI gọn hơn), nhưng **vẫn tính vào hệ số cuối**. Chỉ số này có thể xem qua gauge trên cùng tab QA.
+
+## Bảng đánh giá toàn diện (định tính)
+
+| Mức / Hệ số | Hành vi chuyên môn | Ngưỡng tổng hợp |
+|---|---|---|
+| **❌ KHÔNG ĐẠT (0x)** | Không phát hiện được bug happy case. Testcase không cover được spec. Nhiều bug report bị reject (invalid/duplicate). Nhiều bugs lọt production ở feature đã QA passed. Miss nhiều edge cases quan trọng. | Bug rejection rate > 30% **HOẶC** Escaped bugs > 10/quý |
+| **✅ ĐẠT CHUẨN (1.0x)** | Không lọt bug happy case theo specs. Bug report dễ hiểu, đầy đủ (steps, expected, actual, evidence). Cover được happy path + major edge cases. Ít bugs lọt production. | Bug rejection rate 10–30% **VÀ** Escaped bugs 3–10/quý |
+| **🌟 XUẤT SẮC (1.15x)** | Phát hiện được bugs phức tạp ở edge cases, race conditions. Bug reports detailed, dễ reproduce. Chủ động regression test. Gần như zero escaped bugs. Chứng minh test coverage rất tốt. | Bug rejection rate < 10% **VÀ** Critical/High bugs found ≥ 2 **VÀ** Escaped bugs ≤ 3/quý |

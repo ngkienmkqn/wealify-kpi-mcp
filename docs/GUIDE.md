@@ -8,6 +8,8 @@
 |---------------------|------------------|--------------|
 | "Chapter Sales đang thế nào?" | `kpi_chapter(chapter='SALES')` | Lấy `members[].metrics` → bảng xếp hạng |
 | "Chapter Growth đang thế nào?" | `kpi_chapter(chapter='GROWTH')` | Tương tự |
+| "Chapter Engineer / Dev đang thế nào?" | `kpi_chapter(chapter='ENGINEER')` | Tab DEV: 4 chỉ số cốt lõi + 2 bonus gauge |
+| "QA Tester đang thế nào?" | `kpi_chapter(chapter='ENGINEER')` + filter members QA | Tab QA: Bug Rejection, Escaped Bugs, Bugs Found |
 | "So sánh Q1 vs Q2?" | Gọi 2 lần: `kpi_chapter(chapter, quarter='Q1/2026')` + `kpi_chapter(chapter, quarter='Q2/2026')` | So sánh value cùng metricKey |
 | "Tháng 5 Sales đạt bao nhiêu?" | `kpi_chapter_monthly(chapter='SALES', month='2026-05')` | GTV + số deal + số KH **từng người** trong tháng |
 | "Tháng 4, 5, 6 revenue squad bao nhiêu?" | `kpi_member_kpi(userId)` → xem `engine2.monthly[]` | Revenue squad theo tháng |
@@ -148,7 +150,10 @@ Hoặc dùng `kpi_chapter_monthly` → xem `pacing.level` và `pacing.gap` trự
 ## Danh sách chapters có sẵn
 - `SALES` — BD/Sales, Engine 1, North Star = Tổng GTV cá nhân/Quý
 - `PRODUCT` — PM, Engine 2, North Star = Spec Rejection Rate
-- `ENGINEER` — Dev, Engine 2, North Star = Cycle Time
+- `ENGINEER` — Dev + QA/Tester, Engine 2, **có 2 sub-tab**:
+  - Tab **"Developer (Dev)"**: 4 chỉ số cốt lõi (Cycle Time, Critical Bugs, Completion, Carry-over) + 2 bonus gauge (Review PRs, Contribution — **không tính hệ số cuối**)
+  - Tab **"Tester (QA)"**: 3 chỉ số (Bug Rejection Rate, Escaped Bugs, Critical Bugs Found — **cả 3 tính hệ số cuối**; Bugs Found ẩn khỏi bảng nhưng vẫn tính)
+  - QA members: `nhanpt@wealify.com`, `thuyetvt@wealify.com`
 - `GROWTH` / `MARKETING` — Marketing, Engine 2, North Star = Tăng trưởng KH MỚI sử dụng dịch vụ (%/tháng)
   - ⚠️ Trong DB dùng tên `GROWTH`, nhưng rubric chính thức gọi là **Marketing**
   - Cả 2 tên đều hoạt động khi gọi `kpi_rubric_doc('GROWTH')` hoặc `kpi_rubric_doc('MARKETING')`
